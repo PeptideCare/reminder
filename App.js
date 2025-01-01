@@ -2,119 +2,119 @@ import {
     KeyboardAvoidingView, Platform,
     SafeAreaView,
     ScrollView,
-    StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
     View
 } from 'react-native';
-import React, { useState } from 'react';
+
+import mainStyles from './styles/mainStyles';
+import React, { useState, useEffect } from 'react';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
 
     const [reminder, setReminder] = useState('');
     const [reminders, setReminders] = useState([]);
+    const [date, setDate] = useState(new Date());
+    const [showDatePicker, setShowDatePicker] = useState(false);
+
+    useEffect(() => {
+        const loadReminders = async () => {
+            try {
+                const storedReminders = await AsyncStorage.getItem('reminders');
+                if (storedReminders) {
+                    setReminders(JSON.parse(storedReminders));
+                }
+            } catch (error) {
+                console.error('Failed to load reminders:', error);
+            }
+        };
+        loadReminders();
+    }, []);
+
+    useEffect(() => {
+        const saveReminders = async () => {
+            try {
+                await AsyncStorage.setItem('reminders', JSON.stringify(reminders));
+            } catch (error) {
+                console.error('Failed to save reminders:', error);
+            }
+        };
+        saveReminders();
+    }, [reminders]);
 
     const handleSave = () => {
         if (reminder.trim()) {
-            setReminders([...reminders, reminder]);
+            const newReminder = {
+                text: reminder,
+                time: date.toLocaleString(),
+            };
+            setReminders([...reminders, newReminder]);
             setReminder('');
+            setDate(new Date());
         }
+    };
+
+    const handleDelete = (index) => {
+        const newReminders = reminders.filter((_, i) => i !== index);
+        setReminders(newReminders);
+    };
+
+    const handleDateChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShowDatePicker(false);
+        setDate(currentDate);
     };
 
     return (
         <KeyboardAvoidingView
-            style={styles.container}
+            style={mainStyles.container}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <SafeAreaView style={styles.innerContainer}>
-                <Text style={styles.title}>Reminder Card</Text>
+            <SafeAreaView style={mainStyles.innerContainer}>
+                <Text style={mainStyles.title}>Reminder Card</Text>
 
-                <ScrollView style={styles.scrollView} contentContainerStyle={styles.remindersContainer}>
+                <ScrollView style={mainStyles.scrollView} contentContainerStyle={mainStyles.remindersContainer}>
                     {reminders.map((item, index) => (
-                        <View key={index} style={styles.card}>
-                            <Text style={styles.reminderText}>{item}</Text>
+                        <View key={index} style={mainStyles.card}>
+                            <View>
+                                <Text style={mainStyles.reminderText}>{item.text}</Text>
+                                <Text style={mainStyles.reminderTime}>Reminder Time : {item.time}</Text>
+                            </View>
+                            <TouchableOpacity style={mainStyles.deleteButton} onPress={() => handleDelete(index)}>
+                                <Text style={mainStyles.deleteButtonText}>X</Text>
+                            </TouchableOpacity>
                         </View>
                     ))}
                 </ScrollView>
 
                 <TextInput
-                    style={styles.input}
+                    style={mainStyles.input}
                     placeholder="Enter your reminder here"
                     value={reminder}
                     onChangeText={setReminder}
                 />
 
-                <TouchableOpacity style={styles.button} onPress={handleSave}>
-                    <Text style={styles.buttonText}>Save Reminder</Text>
+                <TouchableOpacity style={mainStyles.dateButton} onPress={() => setShowDatePicker(true)}>
+                    <Text style={mainStyles.dateButtonText}>Reminder Time: {date.toLocaleString()}</Text>
+                </TouchableOpacity>
+
+                {showDatePicker && (
+                    <DateTimePicker
+                        value={date}
+                        mode="datetime"
+                        display="default"
+                        onChange={handleDateChange}
+                    />
+                )}
+
+                <TouchableOpacity style={mainStyles.button} onPress={handleSave}>
+                    <Text style={mainStyles.buttonText}>Save Reminder</Text>
                 </TouchableOpacity>
             </SafeAreaView>
         </KeyboardAvoidingView>
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#f8f9fa',
-    },
-    innerContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 16,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        color: '#333',
-    },
-    scrollView: {
-        width: '100%',
-        marginBottom: 20,
-    },
-    remindersContainer: {
-        alignItems: 'center',
-    },
-    card: {
-        width: '90%',
-        padding: 20,
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 4 },
-        shadowRadius: 10,
-        elevation: 5,
-        marginBottom: 10,
-        alignItems: 'center',
-    },
-    reminderText: {
-        fontSize: 18,
-        color: '#555',
-        textAlign: 'center',
-    },
-    input: {
-        width: '90%',
-        height: 50,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 8,
-        paddingHorizontal: 10,
-        marginBottom: 20,
-        backgroundColor: '#fff',
-    },
-    button: {
-        width: '90%',
-        height: 50,
-        backgroundColor: '#007bff',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 8,
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-});
+
