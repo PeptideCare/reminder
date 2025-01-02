@@ -1,21 +1,14 @@
 import { StyleSheet } from 'react-native';
 
-const mainStyles = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f8f9fa',
-    },
-    innerContainer: {
-        flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
         padding: 16,
     },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        color: '#333',
+    headerSpacer: {
+        height: 20,
     },
     scrollView: {
         width: '100%',
@@ -56,16 +49,6 @@ const mainStyles = StyleSheet.create({
         color: '#fff',
         fontWeight: 'bold',
     },
-    input: {
-        width: '90%',
-        height: 50,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 8,
-        paddingHorizontal: 10,
-        marginBottom: 20,
-        backgroundColor: '#fff',
-    },
     button: {
         width: '90%',
         height: 50,
@@ -80,19 +63,6 @@ const mainStyles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
-    dateButton: {
-        width: '90%',
-        height: 50,
-        backgroundColor: '#6c757d',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 8,
-        marginBottom: 10,
-    },
-    dateButtonText: {
-        color: '#fff',
-        fontSize: 16,
-    },
 });
 
-export default mainStyles;
+export default styles;
