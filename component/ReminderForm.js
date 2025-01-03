@@ -12,13 +12,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const ReminderForm = ({ navigation, route }) => {
     const [reminder, setReminder] = useState('');
     const [date, setDate] = useState(new Date());
-    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [showDatePicker, setShowDatePicker] = useState(true);
 
     const handleSave = async () => {
         if (reminder.trim()) {
             const newReminder = {
                 text: reminder,
-                time: date.toLocaleString(),
+                time: showDatePicker ? date.toLocaleString() : '',
             };
 
             try {
@@ -37,33 +37,39 @@ const ReminderForm = ({ navigation, route }) => {
 
     const handleDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
-        setShowDatePicker(false);
         setDate(currentDate);
+    };
+
+    const clearDatePicker = () => {
+        setShowDatePicker(false);
     };
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.headerSpacer} />
 
-            <TextInput
-                style={styles.input}
-                placeholder="Enter your reminder"
-                value={reminder}
-                onChangeText={setReminder}
-            />
-
-            <TouchableOpacity style={styles.dateButton} onPress={() => setShowDatePicker(true)}>
-                <Text style={styles.dateButtonText}>Set Reminder Time</Text>
-            </TouchableOpacity>
-
-            {showDatePicker && (
-                <DateTimePicker
-                    value={date}
-                    mode="datetime"
-                    display="default"
-                    onChange={handleDateChange}
+            <View style={styles.inputView}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Enter your reminder"
+                    value={reminder}
+                    onChangeText={setReminder}
                 />
-            )}
+
+                {showDatePicker && (
+                    <View style={styles.dateTimePickerView}>
+                        <DateTimePicker
+                            value={date}
+                            mode="datetime"
+                            display="default"
+                            onChange={handleDateChange}
+                        />
+                        <TouchableOpacity style={styles.clearButton} onPress={clearDatePicker}>
+                            <Text style={styles.clearButtonText}>X</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
+            </View>
 
             <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
                 <Text style={styles.saveButtonText}>Save Reminder</Text>

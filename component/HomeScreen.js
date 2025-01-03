@@ -39,7 +39,7 @@ const HomeScreen = ({ navigation }) => {
                     <View key={index} style={styles.card}>
                         <View>
                             <Text style={styles.reminderText}>{item.text}</Text>
-                            <Text style={styles.reminderTime}>{item.time}</Text>
+                            {item.time !== '' && (<Text style={styles.reminderTime}>{item.time}</Text>)}
                         </View>
                         <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(index)}>
                             <Text style={styles.deleteButtonText}>X</Text>

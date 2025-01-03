@@ -8,28 +8,20 @@ const styles = StyleSheet.create({
         padding: 16,
         backgroundColor: '#f8f9fa',
     },
+    inputView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%'
+    },
     input: {
         width: '90%',
-        padding: 10,
+        padding: 15,
         borderColor: '#ccc',
         borderWidth: 1,
         borderRadius: 8,
         marginBottom: 20,
         backgroundColor: '#fff',
-    },
-    dateButton: {
-        width: '90%',
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#17a2b8',
-        borderRadius: 8,
-        marginBottom: 20,
-    },
-    dateButtonText: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: 'bold',
     },
     timeButton: {
         width: '90%',
@@ -45,6 +37,25 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+    dateTimePickerView: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 10
+    },
+    clearButton: {
+        width: 35,
+        height: 35,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#dc3545',
+        borderRadius: 5,
+        marginLeft: 10
+    },
+    clearButtonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
     saveButton: {
         width: '90%',
         height: 50,
@@ -52,6 +63,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#28a745',
         borderRadius: 8,
+        marginBottom: 16,
     },
     saveButtonText: {
         color: '#fff',
