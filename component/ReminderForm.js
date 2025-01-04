@@ -6,8 +6,8 @@ import {
     TouchableOpacity, View,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import styles from "../styles/reminderStyle";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import styles from '../styles/reminderStyle';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ReminderForm = ({ navigation, route }) => {
     const [reminder, setReminder] = useState('');
@@ -51,7 +51,7 @@ const ReminderForm = ({ navigation, route }) => {
             <View style={styles.inputView}>
                 <TextInput
                     style={styles.input}
-                    placeholder="Enter your reminder"
+                    placeholder='Enter your reminder'
                     value={reminder}
                     onChangeText={setReminder}
                 />
@@ -60,8 +60,8 @@ const ReminderForm = ({ navigation, route }) => {
                     <View style={styles.dateTimePickerView}>
                         <DateTimePicker
                             value={date}
-                            mode="datetime"
-                            display="default"
+                            mode='datetime'
+                            display='default'
                             onChange={handleDateChange}
                         />
                         <TouchableOpacity style={styles.clearButton} onPress={clearDatePicker}>

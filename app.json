@@ -3,6 +3,12 @@
     "name": "reminder",
     "slug": "reminder",
     "version": "1.0.0",
-    "newArchEnabled": true
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgroundModes": ["remote-notification"]
+      }
+    }
   }
 }
