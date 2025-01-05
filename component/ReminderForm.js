@@ -18,7 +18,7 @@ const ReminderForm = ({ navigation, route }) => {
         if (reminder.trim()) {
             const newReminder = {
                 text: reminder,
-                time: showDatePicker ? date.toLocaleString() : '',
+                time: showDatePicker ? date : '',
             };
 
             try {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Platform, SafeAreaView, ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import { SafeAreaView, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import * as Notifications from 'expo-notifications';
 import styles from '../styles/homeScreenStyle';
 
@@ -15,50 +15,6 @@ Notifications.setNotificationHandler({
 
 const HomeScreen = ({ navigation }) => {
     const [reminders, setReminders] = useState([]);
-    const [expoPushToken, setExpoPushToken] = useState(null);
-
-    // 알림 승인 안 되어있을 때 alert
-    useEffect(() => {
-        (async () => {
-            const { status } = await Notifications.requestPermissionsAsync();
-            if (status !== 'granted') {
-                alert('Please allow the notification permission!');
-            }
-        })();
-    }, []);
-
-    // 알림 승인 요청
-    useEffect(() => {
-        const registerForPushNotificationsAsync = async () => {
-            if (Platform.OS === 'android') {
-                await Notifications.setNotificationChannelAsync('default', {
-                    name: 'default',
-                    importance: Notifications.AndroidImportance.MAX,
-                    vibrationPattern: [0, 250, 250, 250],
-                    lightColor: '#FF231F7C',
-                });
-            }
-
-            const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-            let finalStatus = existingStatus;
-
-            if (existingStatus !== 'granted') {
-                const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-                finalStatus = status;
-            }
-
-            if (finalStatus !== 'granted') {
-                alert('Failed to get push token for push notification!');
-                return;
-            }
-
-            const token = (await Notifications.getExpoPushTokenAsync()).data;
-            setExpoPushToken(token);
-        };
-
-        registerForPushNotificationsAsync();
-    }, []);
-
 
     // storage에서 list 가져옴
     useEffect(() => {
@@ -75,12 +31,6 @@ const HomeScreen = ({ navigation }) => {
         loadReminders();
     }, []);
 
-    // reminder time에 알림
-    useEffect(() => {
-        // Schedule notifications for all reminders
-        reminders.forEach(scheduleNotification);
-    }, [reminders]);
-
     const handleDelete = async (index) => {
         const newReminders = reminders.filter((_, i) => i !== index);
         setReminders(newReminders);
@@ -88,28 +38,6 @@ const HomeScreen = ({ navigation }) => {
             await AsyncStorage.setItem('reminders', JSON.stringify(newReminders));
         } catch (error) {
             console.error('Failed to save reminders:', error);
-        }
-    };
-
-    const scheduleNotification = async (reminder) => {
-        const reminderTime = reminder.time;
-        const currentTime = new Date().toLocaleString();
-
-        console.log('reminder time : ', {reminderTime});
-        console.log('current time  : ', {currentTime});
-
-        // Ensure the reminder time is in the future
-        if (reminderTime < currentTime) {
-            await Notifications.scheduleNotificationAsync({
-                content: {
-                    title: 'Reminder',
-                    body: reminder.text,
-                },
-                trigger: {
-                    second: reminderTime,
-                },
-            });
-            console.log('Notification scheduled for:', reminderTime);
         }
     };
 
@@ -123,7 +51,7 @@ const HomeScreen = ({ navigation }) => {
                         <View>
                             <Text style={styles.reminderText}>{item.text}</Text>
                             {item.time !== '' && (
-                                <Text style={styles.reminderTime}>{item.time}</Text>
+                                <Text style={styles.reminderTime}>{item.time.toLocaleString()}</Text>
                             )}
                         </View>
                         <TouchableOpacity
