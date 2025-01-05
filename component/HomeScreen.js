@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, View} from 'react-native';
-import * as Notifications from 'expo-notifications';
 import styles from '../styles/homeScreenStyle';
-
-
-Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: true,
-    }),
-});
 
 const HomeScreen = ({ navigation }) => {
     const [reminders, setReminders] = useState([]);
